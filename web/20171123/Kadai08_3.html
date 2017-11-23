@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>さまざまな入力フォーム</h1>
+        <form action="Ex82.jsp" method="post">
+            <!--getも場合はURLに文字列が表示される-->
+            <div>
+                <p>一行のテキストフィールド</p>
+                <input type="text" name="te" value="">
+            </div>
+
+            <div>
+                <p>パスワードフィールド</p>
+                <input type="password" name="pa" value="">
+            </div>
+
+            <div>
+                <p>テキストエリア</p>
+                <textarea name="tA" cols="30" rows="4"></textarea>
+            </div>
+
+            <div>
+                <p>ラジオボタン</p>
+                <input type="radio" name="raji1" value="りんご" checked>りんご
+                <input type="radio" name="raji1" value="れもん" checked>れもん
+            </div>
+
+            <div>
+                <p>チェックボックス</p>
+                <input type="checkbox" name="check1" value="サッカー">サッカー
+                <input type="checkbox" name="check2" value="ラグビー">ラグビー
+                <input type="checkbox" name="check3" value="ホッケー">ホッケー
+            </div>
+
+            <div>
+                <p>プルダウン</p>
+                <select name="pul">
+                    <option value="Java">Java
+                    <option value="PHP">PHP
+                    <option value="GO">GO
+                </select>
+            </div>
+
+
+
+            <div>
+                <input type="submit" name="btn1" value="送信">
+            </div>
+        </form>
+    </body>
+</html>
