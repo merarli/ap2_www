@@ -21,7 +21,8 @@
             Date date = new Date();
             SimpleDateFormat d1 = new SimpleDateFormat("yyyy年MM月dd日");
             String q1 = d1.format(date);
-            out.print("誕生日:1994/10/31<br/>"+q1+"現在で" + getAge(1994,10,4) + "歳です<br/>");%>
+            out.print("誕生日:1994/10/31<br/>"+q1+"現在で" + getAge(1994,10,4) + "歳です<br/>");
+        %>
     </body>
 </html>
 

@@ -13,35 +13,41 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Ex82.jsp</h1>
-        <ul>
-            <li><%=request.getParameter("te")%></li>
-            <li><%=request.getParameter("pa")%></li>
-            <li><%=request.getParameter("tA")%></li>
-            <li><%=request.getParameter("raji1")%></li>
-            
-            <!--チェックボックスをfor文で吐き出す-->
-
-            <%
-                for (int i = 1; i < 4; i++) {
-                    String getStr = request.getParameter("check" + i);
-                    if (getStr != null) {
-                        out.print("<li>" + getStr + "</li>");
-                    }
-                }
-            %>
-
-            <li><%=request.getParameter("pul")%></li>
-        </ul>
-
+        <h1>BMI判定結果</h1>
+        あなたのBMIは
+        <hr>
         <%
-            String str = request.getParameter("te");
-            
-            if (str.equals("こんにちは")) {
-                out.print("<h2>こんにちは</h2>");
-            } else {
-                out.print("<h2>わかりません</h2>");
-            }
+        String ta = request.getParameter("ta");
+        String si = request.getParameter("si");
+        out.print(calBMI(ta,si));
+        double BMI = calBMI(ta,si);
+        out.print("<hr>");
+        out.print(hantei(BMI));
+        out.print("<hr>");
+        
+        
         %>
+        
+
     </body>
 </html>
+<%!
+    double calBMI(String weight, String height) {
+
+        return Integer.parseInt(weight) / Integer.parseInt(height) * Integer.parseInt(height);
+    }
+    
+    String hantei(double BMI){
+    String ans = "";
+    
+    if(BMI<18.5){
+        ans = "痩せ気味";
+    }else if(BMI>=25){
+        ans = "太り気味";
+    }else{
+        ans = "標準";
+    }
+    
+    return ans;
+    }
+%>

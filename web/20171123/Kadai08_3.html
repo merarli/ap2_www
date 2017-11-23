@@ -11,45 +11,39 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <h1>さまざまな入力フォーム</h1>
-        <form action="Ex82.jsp" method="post">
+        <h1>アンケート入力</h1>
+        <form action="Kadai08_3.jsp" method="post">
             <!--getも場合はURLに文字列が表示される-->
             <div>
-                <p>一行のテキストフィールド</p>
+                <p>名前</p>
                 <input type="text" name="te" value="">
             </div>
 
             <div>
-                <p>パスワードフィールド</p>
-                <input type="password" name="pa" value="">
+                <p>製品名</p>
+                <select name="pul">
+                    <option value="本マグロ中落ち感ーおれんじびーるを添えてー">本マグロ中落ち感ーおれんじびーるを添えてー
+                    <option value="特上者もお刺身真空パック">特上者もお刺身真空パック
+                    <option value="熟成がつお節ー贅沢まるごと一本ー">熟成がつお節ー贅沢まるごと一本ー
+                </select>
             </div>
 
             <div>
-                <p>テキストエリア</p>
+                <p>評価</p>
+                <input type="radio" name="raji1" value="良い" checked>良い
+                <input type="radio" name="raji1" value="普通" checked>普通
+                <input type="radio" name="raji1" value="悪い" checked>悪い
+            </div>
+
+
+            <div>
+                <p>自由意見</p>
                 <textarea name="tA" cols="30" rows="4"></textarea>
             </div>
 
-            <div>
-                <p>ラジオボタン</p>
-                <input type="radio" name="raji1" value="りんご" checked>りんご
-                <input type="radio" name="raji1" value="れもん" checked>れもん
-            </div>
 
-            <div>
-                <p>チェックボックス</p>
-                <input type="checkbox" name="check1" value="サッカー">サッカー
-                <input type="checkbox" name="check2" value="ラグビー">ラグビー
-                <input type="checkbox" name="check3" value="ホッケー">ホッケー
-            </div>
 
-            <div>
-                <p>プルダウン</p>
-                <select name="pul">
-                    <option value="Java">Java
-                    <option value="PHP">PHP
-                    <option value="GO">GO
-                </select>
-            </div>
+
 
 
 

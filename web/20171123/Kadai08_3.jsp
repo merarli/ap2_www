@@ -13,35 +13,17 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Ex82.jsp</h1>
-        <ul>
-            <li><%=request.getParameter("te")%></li>
-            <li><%=request.getParameter("pa")%></li>
-            <li><%=request.getParameter("tA")%></li>
-            <li><%=request.getParameter("raji1")%></li>
+        <h1>アンケート結果</h1>
+            <hr>
+            名前：<%=request.getParameter("te")%> <br>
+            製品名：<%=request.getParameter("pul")%><br>
             
-            <!--チェックボックスをfor文で吐き出す-->
-
-            <%
-                for (int i = 1; i < 4; i++) {
-                    String getStr = request.getParameter("check" + i);
-                    if (getStr != null) {
-                        out.print("<li>" + getStr + "</li>");
-                    }
-                }
-            %>
-
-            <li><%=request.getParameter("pul")%></li>
-        </ul>
-
-        <%
-            String str = request.getParameter("te");
+            評価：<%=request.getParameter("raji1")%><br>
+            自由意見：<br>
+            <%=request.getParameter("tA")%><br>
+            <hr>
             
-            if (str.equals("こんにちは")) {
-                out.print("<h2>こんにちは</h2>");
-            } else {
-                out.print("<h2>わかりません</h2>");
-            }
-        %>
+            <%@include file = "Time.jsp"%>
+
     </body>
 </html>
