@@ -14,16 +14,23 @@
     </head>
     <body>
         <h1>アンケート結果</h1>
-            <hr>
-            名前：<%=request.getParameter("te")%> <br>
-            製品名：<%=request.getParameter("pul")%><br>
-            
-            評価：<%=request.getParameter("raji1")%><br>
-            自由意見：<br>
-            <%=request.getParameter("tA")%><br>
-            <hr>
-            
-            <%@include file = "Time.jsp"%>
+        <hr>
+        名前：<%=request.getParameter("te")%> <br>
+        製品名：<%=request.getParameter("pul")%><br>
+
+        評価：<%=request.getParameter("raji1")%><br>
+        自由意見：<br>
+        <%
+        String txt=request.getParameter("tA");
+        txt = txt.replaceAll("\n", "<br>").replaceAll(" ", "&nbsp;");
+        out.println(txt);
+        %>
+
+
+        <%=request.getParameter("tA")%><br>
+        <hr>
+
+        <%@include file = "Time.jsp"%>
 
     </body>
 </html>
