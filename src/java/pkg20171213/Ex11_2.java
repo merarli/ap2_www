@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +41,7 @@ public class Ex11_2 extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-            /* TODO output your page here. You may use following sample code. */
+        /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");
 //            out.println("<html>");
 //            out.println("<head>");
@@ -48,119 +49,119 @@ public class Ex11_2 extends HttpServlet {
 //            out.println("</head>");
 //            out.println("<body>");
 //            out.println("<h1>Servlet Ex11_1 at " + request.getContextPath() + "</h1>");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-            request.setCharacterEncoding("UTF-8");
-            response.setContentType("text/html;charset=UTF-8");
+        //コネクションとステートメントの宣言
+        Connection con = null;
+        Statement stmt = null;
 
-            //コネクションとステートメントの宣言
-            Connection con = null;
-            Statement stmt = null;
+        try (PrintWriter out = response.getWriter()) {
+            //Class.forNameの記述
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
 
-            try (PrintWriter out = response.getWriter()) {
-                //Class.forNameの記述
-                Class.forName("org.apache.derby.jdbc.ClientDriver");
+            //データベースへの接続
+            String driverUrl = "jdbc:derby://localhost:1527/meibo";
+            con = DriverManager.getConnection(driverUrl, "db", "db");
+            stmt = con.createStatement();
 
-                //データベースへの接続
-                String driverUrl = "jdbc:derby://localhost:1527/meibo";
-                con = DriverManager.getConnection(driverUrl, "db", "db");
-                stmt = con.createStatement();
+            String sql = "select * from T_STUDENT_A";
+            ResultSet rs = stmt.executeQuery(sql);
 
-                String sql = "select * from T_STUDENT_A";
-                ResultSet rs = stmt.executeQuery(sql);
+            //Student型のArrayListを作成
+            List<Student> slist = new ArrayList<>();
 
-                //Student型のArrayListを作成
-                List<Student> slist = new ArrayList<>();
+            //データベースから値を取得して出力
+            while (rs.next()) {
+                //1つのレコードの情報を格納するインスタンスstdを作成
+                Student std = new Student();
 
-                //データベースから値を取得して出力
-                while (rs.next()) {
-                    //1つのレコードの情報を格納するインスタンスstdを作成
-                    Student std = new Student();
+                //stdにレコードの値をセット
+                std.setSID(rs.getInt("STUDENT_ID"));
+                std.setName(rs.getString("FULLNAME"));
+                std.setGakubu(rs.getInt("GAKUBU_ID"));
+                std.setGrade(rs.getInt("GRADE"));
 
-                    //stdにレコードの値をセット
-                    std.setSID(rs.getInt("STUDENT_ID"));
-                    std.setName(rs.getString("FULLNAME"));
-                    std.setGakubu(rs.getInt("GAKUBU_ID"));
-                    std.setGrade(rs.getInt("GRADE"));
+                //リストにstdを追加
+                slist.add(std);
+            }
 
-                    //リストにstdを追加
-                    slist.add(std);
+            //ResultSetのclose
+            rs.close();
+
+            //リストの内容を順番に出力
+//                for (Student s : slist) {
+//                    out.println("STUDENT_ID=" + s.getSID() + "<br>");
+//                    out.println("FULLNAME=" + s.getName() + "<br>");
+//                    out.println("GAKUBU_ID=" + s.getGakubu() + "<br>");
+//                    out.println("GRADE=" + s.getGrade() + "<br>");
+            //同様にFULLNAME, GAKUBU_ID, GRADEを出力
+//                }
+            //JSPに渡す
+            request.setAttribute("slist", slist);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Ex11_2.jsp");
+            
+            dispatcher.forward(request, response);
+            
+        } catch (Exception e) {
+            //サーブレット内での例外をアプリケーションのエラーとして表示
+            throw new ServletException(e);
+        } finally {
+            //例外が発生する・しないにかかわらず確実にデータベースから切断
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServletException(e);
                 }
-
-                //ResultSetのclose
-                rs.close();
-
-                //リストの内容を順番に出力
-                for (Student s : slist) {
-                    out.println("STUDENT_ID=" + s.getSID() + "<br>");
-                    out.println("FULLNAME=" + s.getName() + "<br>");
-                    out.println("GAKUBU_ID=" + s.getGakubu() + "<br>");
-                    out.println("GRADE=" + s.getGrade() + "<br>");
-                    //同様にFULLNAME, GAKUBU_ID, GRADEを出力
-                }
-
-            } catch (Exception e) {
-                //サーブレット内での例外をアプリケーションのエラーとして表示
-                throw new ServletException(e);
-            } finally {
-                //例外が発生する・しないにかかわらず確実にデータベースから切断
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch (SQLException e) {
-                        throw new ServletException(e);
-                    }
-                }
-                if (con != null) {
-                    try {
-                        con.close();
-                    } catch (SQLException e) {
-                        throw new ServletException(e);
-                    }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    throw new ServletException(e);
                 }
             }
         }
+    }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-        /**
-         * Handles the HTTP <code>GET</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doGet
-        (HttpServletRequest request, HttpServletResponse response)
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            processRequest(request, response);
-        }
-
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doPost
-        (HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            processRequest(request, response);
-        }
-
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo
-        
-            () {
-        return "Short description";
-        }// </editor-fold>
-
+        processRequest(request, response);
     }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
