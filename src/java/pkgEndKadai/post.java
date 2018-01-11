@@ -7,9 +7,17 @@ package pkgEndKadai;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +25,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ *
  * @author merarli
  */
-@WebServlet(urlPatterns = {"/pkgEndKadai/Allview"})
-public class Allview extends HttpServlet {
+@WebServlet(name = "post", urlPatterns = {"/pkgEndKadai/post"})
+public class post extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,7 +42,6 @@ public class Allview extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("text/html;charset=UTF-8");
 
         //コネクションとステートメントの宣言
@@ -46,49 +54,43 @@ public class Allview extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Kadai10_3</title>");
+            out.println("<title>Servlet Ex103</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h3>Servlet Kadai10_3 at " + request.getContextPath() + "</h3>");
+            out.println("<h3>Servlet Ex103 at " + request.getContextPath() + "</h3>");
 
-            try {
-//                Class.forNameの記述
-                Class.forName("com.mysql.jdbc.Driver").newInstance();
+//            Class.forNameの記述
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-                //データベースへの接続
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/deaiDB", "kadaiyou", "Kadaiyou1!");
-                stmt = con.createStatement();
+            //データベースへの接続
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/deaiDB", "kadaiyou", "Kadaiyou1!");
+            stmt = con.createStatement();
+            request.setCharacterEncoding("UTF-8");
 
-//            SQL文の発行
-//                String username = request.getParameter("username");
-//                String sex = request.getParameter("sex");
-//                String age = request.getParameter("age");
-//                String appeal = request.getParameter("appeal");
-//
-//                String sql1 = "INSERT INTO postlist VALUES(DEFAULT,?,?,?,?,?)";
-//
-//                ps = con.prepareStatement(sql1);
-//
-////                ps.setString(1, "DEFAULT");
-//                ps.setString(1, username);
-//                ps.setString(2, sex);
-//                ps.setInt(3, Integer.parseInt(age));
-//                ps.setString(4, appeal);
-//
-//                //投稿の日付
-//                GregorianCalendar cal = new GregorianCalendar();
-//                SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-//                String datestr = format.format(cal.getTime());
-//                java.sql.Date d3 = Date.valueOf(datestr);
-//
-//                ps.setDate(5, d3);
-//                int count = ps.executeUpdate();
-//                ps.close();
-            } catch (SQLException e) {
-                out.println("SQLException:" + e.getMessage());
-            }
+            String username = request.getParameter("username");
+            String sex = request.getParameter("sex");
+            String age = request.getParameter("age");
+            String appeal = request.getParameter("appeal");
 
-            //表示
+            //レコードの追加
+            String sql1 = "INSERT INTO postlist VALUES(DEFAULT,?,?,?,?,?)";
+            ps = con.prepareStatement(sql1);
+
+            ps.setString(1, username);
+            ps.setString(2, sex);
+            ps.setInt(3, Integer.parseInt(age));
+            ps.setString(4, appeal);
+
+            //投稿の日付
+            GregorianCalendar cal = new GregorianCalendar();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+            String datestr = format.format(cal.getTime());
+            java.sql.Date d3 = Date.valueOf(datestr);
+
+            ps.setDate(5, d3);
+
+            int count = ps.executeUpdate();
+
             String sql2 = "select * from postlist";
             ps = con.prepareStatement(sql2);
             ResultSet rs = ps.executeQuery();
@@ -105,9 +107,7 @@ public class Allview extends HttpServlet {
             }
 
             //ResultSetのclose
-            ps.close();
             rs.close();
-            con.close();
 
             out.println("</body>");
             out.println("</html>");
@@ -116,9 +116,9 @@ public class Allview extends HttpServlet {
             throw new ServletException(e);
         } finally {
             //例外が発生する・しないにかかわらず確実にデータベースから切断
-            if (stmt != null) {
+            if (ps != null) {
                 try {
-                    stmt.close();
+                    ps.close();
                 } catch (SQLException e) {
                     throw new ServletException(e);
                 }
@@ -130,16 +130,7 @@ public class Allview extends HttpServlet {
                     throw new ServletException(e);
                 }
             }
-
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new ServletException(e);
-                }
-            }
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
