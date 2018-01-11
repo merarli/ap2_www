@@ -63,27 +63,29 @@ public class Allview extends HttpServlet {
             String sex = request.getParameter("sex");
             String age = request.getParameter("age");
             String appeal = request.getParameter("appeal");
-            
+
             String sql = "INSERT INTO postlist VALUES(?,?,?,?,?,?)";
-            
+
             ps = con.prepareStatement(sql);
-            
+
             ps.setString(1, "DEFAULT");
             ps.setString(2, username);
             ps.setString(3, sex);
             ps.setInt(4, Integer.parseInt(age));
             ps.setString(5, appeal);
-            
+
             //投稿の日付
             GregorianCalendar cal = new GregorianCalendar();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
             String datestr = format.format(cal.getTime());
+            java.sql.Date d3 = Date.valueOf(datestr);
             
-            ps.setString(6,datestr);
-
+            
+            ps.setDate(6, d3);
             
             int count = ps.executeUpdate();
 
+            //表示
             String sql2 = "select * from postlist";
             ps = con.prepareStatement(sql2);
             ResultSet rs = ps.executeQuery();
